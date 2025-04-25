@@ -1,5 +1,6 @@
 package com.exxeta.hotelmanager.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -22,6 +23,7 @@ public class HotelRoom {
     private boolean hasMinibar;
 
     @Column(name = "is_available", nullable = false, columnDefinition = "boolean default true")
+    @JsonProperty("isAvailable")
     private boolean isAvailable = true;
 
     @CreationTimestamp

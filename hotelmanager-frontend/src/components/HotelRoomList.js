@@ -105,7 +105,7 @@ export default function HotelRoomList() {
         <Container sx={{ mt: 4, mb: 4 }}>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
-                    <Typography variant="h5">
+                    <Typography variant="h4">
                         Hotel Rooms List
                     </Typography>
                     <Button
@@ -221,14 +221,15 @@ export default function HotelRoomList() {
                                         <TableCell>
                                             {room.isAvailable ? (
                                                 <Chip
+                                                label="Available"
+                                                color="success"
+                                                variant="outlined"
+                                            />
+                                            ) : (
+                                                
+                                                <Chip
                                                     label="Occupied"
                                                     color="error"
-                                                    variant="outlined"
-                                                />
-                                            ) : (
-                                                <Chip
-                                                    label="Available"
-                                                    color="success"
                                                     variant="outlined"
                                                 />
                                             )}
