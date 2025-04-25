@@ -7,15 +7,16 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+//This will create the following rooms  when running the application, but only if database is empty.
+//Availability defaults to true
+
 @Configuration
 public class DataInitializer {
 
     @Bean
     CommandLineRunner initDatabase(HotelRoomRepository repository) {
         return args -> {
-            // Check if rooms already exist
             if (repository.count() == 0) {
-                // Double room with minibar
                 repository.save(
                         new HotelRoom(
                                 101,
@@ -24,7 +25,6 @@ public class DataInitializer {
                         )
                 );
 
-                // Single room with minibar
                 repository.save(
                         new HotelRoom(
                                 202,
@@ -33,7 +33,6 @@ public class DataInitializer {
                         )
                 );
 
-                // Suite without minibar
                 repository.save(
                         new HotelRoom(
                                 303,
