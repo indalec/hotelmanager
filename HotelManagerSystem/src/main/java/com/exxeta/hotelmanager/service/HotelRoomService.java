@@ -1,10 +1,12 @@
 package com.exxeta.hotelmanager.service;
 
 import com.exxeta.hotelmanager.model.HotelRoom;
+import com.exxeta.hotelmanager.model.RoomType;
 
 import java.util.List;
 
 public interface HotelRoomService {
-    public HotelRoom saveHotelRoom(HotelRoom hotelRoom);
-    public List<HotelRoom> getAllHotelRooms();
+    HotelRoom saveHotelRoom(HotelRoom hotelRoom);
+    List<HotelRoom> getAllHotelRooms();
+    List<HotelRoom> getFilteredHotelRooms(Boolean isAvailable, Boolean hasMinibar, RoomType roomType);
 }

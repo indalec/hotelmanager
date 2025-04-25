@@ -12,10 +12,18 @@ import {
     Typography,
     CircularProgress,
     Alert,
-    Chip
+    Chip,
+    Button,
+    MenuItem,
+    Select,
+    FormControl,
+    InputLabel,
+    Box,
+    Collapse
 } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import { Tooltip } from '@mui/material';
 
 const columns = [
@@ -31,23 +39,55 @@ export default function HotelRoomList() {
     const [error, setError] = useState('');
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [showFilters, setShowFilters] = useState(false);
+    const [filters, setFilters] = useState({
+        availability: 'all',
+        minibar: 'all',
+        roomType: 'all'
+    });
+
+    const fetchRooms = async (params = {}) => {
+        try {
+            const query = new URLSearchParams(params).toString();
+            const response = await fetch(`http://localhost:8080/hotel-room/filter?${query}`);
+            if (!response.ok) throw new Error('Failed to fetch rooms');
+            const data = await response.json();
+            setRooms(data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchRooms = async () => {
-            try {
-                const response = await fetch('http://localhost:8080/hotel-room/get-all');
-                if (!response.ok) throw new Error('Failed to fetch rooms');
-                const data = await response.json();
-                setRooms(data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchRooms();
     }, []);
+
+    const handleFilterChange = (event) => {
+        const { name, value } = event.target;
+        setFilters(prev => ({ ...prev, [name]: value }));
+    };
+
+    const applyFilters = () => {
+        const params = {};
+        if (filters.availability !== 'all') params.isAvailable = filters.availability;
+        if (filters.minibar !== 'all') params.hasMinibar = filters.minibar;
+        if (filters.roomType !== 'all') params.roomType = filters.roomType;
+
+        setLoading(true);
+        fetchRooms(params);
+    };
+
+    const resetFilters = () => {
+        setFilters({
+            availability: 'all',
+            minibar: 'all',
+            roomType: 'all'
+        });
+        setLoading(true);
+        fetchRooms();
+    };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -64,9 +104,72 @@ export default function HotelRoomList() {
     return (
         <Container sx={{ mt: 4, mb: 4 }}>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <Typography variant="h5" sx={{ p: 2 }}>
-                    Hotel Rooms List
-                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
+                    <Typography variant="h5">
+                        Hotel Rooms List
+                    </Typography>
+                    <Button
+                        variant="outlined"
+                        startIcon={<FilterListIcon />}
+                        onClick={() => setShowFilters(!showFilters)}
+                    >
+                        {showFilters ? 'Hide Filters' : 'Filter Rooms'}
+                    </Button>
+                </Box>
+
+                <Collapse in={showFilters}>
+                    <Box sx={{ p: 2, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                        <FormControl sx={{ minWidth: 120 }} size="small">
+                            <InputLabel>Availability</InputLabel>
+                            <Select
+                                name="availability"
+                                value={filters.availability}
+                                label="Availability"
+                                onChange={handleFilterChange}
+                            >
+                                <MenuItem value="all">All</MenuItem>
+                                <MenuItem value="true">Available</MenuItem>
+                                <MenuItem value="false">Occupied</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                        <FormControl sx={{ minWidth: 120 }} size="small">
+                            <InputLabel>Minibar</InputLabel>
+                            <Select
+                                name="minibar"
+                                value={filters.minibar}
+                                label="Minibar"
+                                onChange={handleFilterChange}
+                            >
+                                <MenuItem value="all">All</MenuItem>
+                                <MenuItem value="true">Has Minibar</MenuItem>
+                                <MenuItem value="false">No Minibar</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                        <FormControl sx={{ minWidth: 120 }} size="small">
+                            <InputLabel>Room Type</InputLabel>
+                            <Select
+                                name="roomType"
+                                value={filters.roomType}
+                                label="Room Type"
+                                onChange={handleFilterChange}
+                            >
+                                <MenuItem value="all">All</MenuItem>
+                                <MenuItem value="SINGLE">Single</MenuItem>
+                                <MenuItem value="DOUBLE">Double</MenuItem>
+                                <MenuItem value="SUITE">Suite</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                        <Button variant="contained" onClick={applyFilters}>
+                            Apply Filters
+                        </Button>
+                        <Button variant="outlined" onClick={resetFilters}>
+                            Clear Filters
+                        </Button>
+                    </Box>
+                </Collapse>
 
                 <TableContainer sx={{ maxHeight: 600 }}>
                     <Table stickyHeader aria-label="sticky table">
@@ -118,7 +221,7 @@ export default function HotelRoomList() {
                                         <TableCell>
                                             {room.isAvailable ? (
                                                 <Chip
-                                                    label="Not available"
+                                                    label="Occupied"
                                                     color="error"
                                                     variant="outlined"
                                                 />
