@@ -1,14 +1,23 @@
-import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Appbar from './components/Appbar';
-import AddHotelRoom from './components/AddHotelRoom';
+import routes from './routes';
 
 function App() {
   return (
-    <div className="App">
-<Appbar />
-Hola
-<AddHotelRoom />
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Appbar />
+        <Routes>
+          {routes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={route.element}
+            />
+          ))}
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
