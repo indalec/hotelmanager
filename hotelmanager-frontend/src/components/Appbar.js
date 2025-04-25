@@ -42,7 +42,7 @@ export default function Appbar() {
           <Typography variant="h6" color="inherit" component="div">
             Hotel Manager
           </Typography>
-          
+
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
@@ -51,6 +51,9 @@ export default function Appbar() {
             <MenuItem onClick={() => handleNavigation('/')}>Home</MenuItem>
             <MenuItem onClick={() => handleNavigation('/add-hotel-room')}>
               Add Hotel Room
+            </MenuItem>
+            <MenuItem onClick={() => handleNavigation('/view-rooms')}>
+              View Rooms
             </MenuItem>
           </Menu>
         </Toolbar>

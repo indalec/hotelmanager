@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import AddHotelRoom from './components/AddHotelRoom';
 import HomePage from './components/HomePage';
+import HotelRoomList from './components/HotelRoomList';
 
 const routes = [
   {
@@ -10,6 +11,10 @@ const routes = [
   {
     path: '/add-hotel-room',
     element: <AddHotelRoom />,
+  },
+  {
+    path: '/view-rooms',
+    element: <HotelRoomList />,
   },
   {
     path: '*',
