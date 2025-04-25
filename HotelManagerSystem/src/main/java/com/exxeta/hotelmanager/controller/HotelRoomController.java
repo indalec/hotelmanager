@@ -61,4 +61,15 @@ public class HotelRoomController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+    @PostMapping("/add-batch")
+    public ResponseEntity<String> addBatch(@RequestBody List<HotelRoom> hotelRooms) {
+        try {
+            hotelRoomService.saveAllHotelRooms(hotelRooms);
+            return ResponseEntity.ok("Added " + hotelRooms.size() + " rooms successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error adding rooms");
+        }
+    }
+
 }

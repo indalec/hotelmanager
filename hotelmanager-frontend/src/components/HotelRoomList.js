@@ -19,18 +19,26 @@ import {
     FormControl,
     InputLabel,
     Box,
-    Collapse
+    Collapse,
+    IconButton,
+    Checkbox,
+    Switch
 } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Tooltip } from '@mui/material';
 
 const columns = [
     { id: 'roomNumber', label: 'Room Number', minWidth: 100 },
-    { id: 'roomType', label: 'Room Type', minWidth: 120 },
+    { id: 'roomType', label: 'Room Type', minWidth: 150 },
     { id: 'hasMinibar', label: 'Minibar', minWidth: 100 },
     { id: 'isAvailable', label: 'Availability', minWidth: 120 },
+    { id: 'actions', label: 'Actions', minWidth: 130 }
 ];
 
 export default function HotelRoomList() {
@@ -45,6 +53,8 @@ export default function HotelRoomList() {
         minibar: 'all',
         roomType: 'all'
     });
+    const [editingRoomNumber, setEditingRoomNumber] = useState(null);
+    const [editedRoom, setEditedRoom] = useState({});
 
     const fetchRooms = async (params = {}) => {
         try {
@@ -64,6 +74,60 @@ export default function HotelRoomList() {
         fetchRooms();
     }, []);
 
+    const handleEditClick = (room) => {
+        setEditingRoomNumber(room.roomNumber);
+        setEditedRoom({
+            roomType: room.roomType,
+            hasMinibar: room.hasMinibar,
+            isAvailable: room.isAvailable
+        });
+    };
+
+    const handleCancelEdit = () => {
+        setEditingRoomNumber(null);
+        setEditedRoom({});
+    };
+
+    const handleSaveEdit = async (roomNumber) => {
+        try {
+            const response = await fetch(`http://localhost:8080/hotel-room/update/${roomNumber}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(editedRoom)
+            });
+
+            if (response.ok) {
+                const updatedRooms = rooms.map(room => 
+                    room.roomNumber === roomNumber ? { ...room, ...editedRoom } : room
+                );
+                setRooms(updatedRooms);
+                setEditingRoomNumber(null);
+            } else {
+                alert('Error updating room');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to update room');
+        }
+    };
+
+    const handleDelete = async (roomNumber) => {
+        if (window.confirm(`Are you sure you want to delete room ${roomNumber}?`)) {
+            try {
+                const response = await fetch(`http://localhost:8080/hotel-room/delete/${roomNumber}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    setRooms(rooms.filter(room => room.roomNumber !== roomNumber));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to delete room');
+            }
+        }
+    };
+
     const handleFilterChange = (event) => {
         const { name, value } = event.target;
         setFilters(prev => ({ ...prev, [name]: value }));
@@ -74,7 +138,7 @@ export default function HotelRoomList() {
         if (filters.availability !== 'all') params.isAvailable = filters.availability;
         if (filters.minibar !== 'all') params.hasMinibar = filters.minibar;
         if (filters.roomType !== 'all') params.roomType = filters.roomType;
-
+        
         setLoading(true);
         fetchRooms(params);
     };
@@ -98,6 +162,102 @@ export default function HotelRoomList() {
         setPage(0);
     };
 
+    const renderTableCell = (room, column) => {
+        const isEditing = editingRoomNumber === room.roomNumber;
+        
+        switch (column.id) {
+            case 'roomType':
+                return isEditing ? (
+                    <FormControl size="small" fullWidth>
+                        <Select
+                            value={editedRoom.roomType}
+                            onChange={(e) => setEditedRoom({...editedRoom, roomType: e.target.value})}
+                        >
+                            <MenuItem value="SINGLE">Single</MenuItem>
+                            <MenuItem value="DOUBLE">Double</MenuItem>
+                            <MenuItem value="SUITE">Suite</MenuItem>
+                        </Select>
+                    </FormControl>
+                ) : (
+                    <Chip
+                        label={room.roomType.charAt(0) + room.roomType.slice(1).toLowerCase()}
+                        color={
+                            room.roomType === 'SUITE' ? 'primary' :
+                            room.roomType === 'DOUBLE' ? 'secondary' : 'default'
+                        }
+                    />
+                );
+                
+            case 'hasMinibar':
+                return isEditing ? (
+                    <Checkbox
+                        checked={editedRoom.hasMinibar}
+                        onChange={(e) => setEditedRoom({...editedRoom, hasMinibar: e.target.checked})}
+                        color="primary"
+                    />
+                ) : (
+                    room.hasMinibar ? (
+                        <Tooltip title="Minibar Available">
+                            <CheckCircleOutlineIcon
+                                color="success"
+                                sx={{ fontSize: 28, verticalAlign: 'middle', mr: 1 }}
+                            />
+                        </Tooltip>
+                    ) : (
+                        <Tooltip title="No Minibar">
+                            <HighlightOffIcon
+                                color="error"
+                                sx={{ fontSize: 28, verticalAlign: 'middle', mr: 1 }}
+                            />
+                        </Tooltip>
+                    )
+                );
+                
+            case 'isAvailable':
+                return isEditing ? (
+                    <Switch
+                        checked={editedRoom.isAvailable}
+                        onChange={(e) => setEditedRoom({...editedRoom, isAvailable: e.target.checked})}
+                        color="primary"
+                    />
+                ) : (
+                    <Chip
+                        label={room.isAvailable ? "Available" : "Occupied"}
+                        color={room.isAvailable ? "success" : "error"}
+                        variant="outlined"
+                    />
+                );
+                
+            case 'actions':
+                return (
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                        {isEditing ? (
+                            <>
+                                <IconButton onClick={() => handleSaveEdit(room.roomNumber)}>
+                                    <SaveIcon color="primary" />
+                                </IconButton>
+                                <IconButton onClick={handleCancelEdit}>
+                                    <CancelIcon color="error" />
+                                </IconButton>
+                            </>
+                        ) : (
+                            <>
+                                <IconButton onClick={() => handleEditClick(room)}>
+                                    <EditIcon color="primary" />
+                                </IconButton>
+                                <IconButton onClick={() => handleDelete(room.roomNumber)}>
+                                    <DeleteIcon color="error" />
+                                </IconButton>
+                            </>
+                        )}
+                    </Box>
+                );
+                
+            default:
+                return room[column.id];
+        }
+    };
+
     if (loading) return <CircularProgress sx={{ display: 'block', margin: '2rem auto' }} />;
     if (error) return <Alert severity="error" sx={{ margin: 2 }}>{error}</Alert>;
 
@@ -105,7 +265,7 @@ export default function HotelRoomList() {
         <Container sx={{ mt: 4, mb: 4 }}>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
-                    <Typography variant="h4">
+                    <Typography variant="h5">
                         Hotel Rooms List
                     </Typography>
                     <Button
@@ -191,49 +351,11 @@ export default function HotelRoomList() {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((room) => (
                                     <TableRow hover role="checkbox" tabIndex={-1} key={room.roomNumber}>
-                                        <TableCell>{room.roomNumber}</TableCell>
-                                        <TableCell>
-                                            <Chip
-                                                label={room.roomType.charAt(0) + room.roomType.slice(1).toLowerCase()}
-                                                color={
-                                                    room.roomType === 'SUITE' ? 'primary' :
-                                                        room.roomType === 'DOUBLE' ? 'secondary' : 'default'
-                                                }
-                                            />
-                                        </TableCell>
-                                        <TableCell align="left">
-                                            {room.hasMinibar ? (
-                                                <Tooltip title="Minibar Available">
-                                                    <CheckCircleOutlineIcon
-                                                        color="success"
-                                                        sx={{ fontSize: 28, verticalAlign: 'middle', mr: 1 }}
-                                                    />
-                                                </Tooltip>
-                                            ) : (
-                                                <Tooltip title="No Minibar">
-                                                    <HighlightOffIcon
-                                                        color="error"
-                                                        sx={{ fontSize: 28, verticalAlign: 'middle', mr: 1 }}
-                                                    />
-                                                </Tooltip>
-                                            )}
-                                        </TableCell>
-                                        <TableCell>
-                                            {room.isAvailable ? (
-                                                <Chip
-                                                label="Available"
-                                                color="success"
-                                                variant="outlined"
-                                            />
-                                            ) : (
-                                                
-                                                <Chip
-                                                    label="Occupied"
-                                                    color="error"
-                                                    variant="outlined"
-                                                />
-                                            )}
-                                        </TableCell>
+                                        {columns.map((column) => (
+                                            <TableCell key={column.id} align="left">
+                                                {renderTableCell(room, column)}
+                                            </TableCell>
+                                        ))}
                                     </TableRow>
                                 ))}
                         </TableBody>

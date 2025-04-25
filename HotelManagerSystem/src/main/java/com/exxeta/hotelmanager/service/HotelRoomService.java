@@ -11,4 +11,5 @@ public interface HotelRoomService {
     List<HotelRoom> getFilteredHotelRooms(Boolean isAvailable, Boolean hasMinibar, RoomType roomType);
     HotelRoom updateHotelRoom(int roomNumber, HotelRoom updatedRoom);
     void deleteHotelRoom(int roomNumber);
+    void saveAllHotelRooms(List<HotelRoom> hotelRooms);
 }

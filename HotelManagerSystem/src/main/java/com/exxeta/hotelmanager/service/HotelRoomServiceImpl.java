@@ -53,4 +53,8 @@ public class HotelRoomServiceImpl implements HotelRoomService {
             throw new RuntimeException("Room not found with number: " + roomNumber);
         }
     }
+    @Override
+    public void saveAllHotelRooms(List<HotelRoom> hotelRooms) {
+        hotelRoomRepository.saveAll(hotelRooms);
+    }
 }
