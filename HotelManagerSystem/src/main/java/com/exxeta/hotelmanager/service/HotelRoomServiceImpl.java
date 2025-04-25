@@ -4,6 +4,7 @@ import com.exxeta.hotelmanager.model.HotelRoom;
 import com.exxeta.hotelmanager.model.RoomType;
 import com.exxeta.hotelmanager.repository.HotelRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,11 +28,7 @@ public class HotelRoomServiceImpl implements HotelRoomService {
     public List<HotelRoom> getAllHotelRooms() {
         return hotelRoomRepository.findAll();
     }
-
-    @Override
-    public List<HotelRoom> getFilteredHotelRooms(Boolean isAvailable, Boolean hasMinibar, RoomType roomType) {
-        return hotelRoomRepository.findByFilters(isAvailable, hasMinibar, roomType);
-    }
+    
 
     @Override
     public HotelRoom updateHotelRoom(int roomNumber, HotelRoom updatedRoom) {
@@ -56,5 +53,30 @@ public class HotelRoomServiceImpl implements HotelRoomService {
     @Override
     public void saveAllHotelRooms(List<HotelRoom> hotelRooms) {
         hotelRoomRepository.saveAll(hotelRooms);
+    }
+
+    @Override
+    public List<HotelRoom> getFilteredHotelRooms(
+            Boolean isAvailable,
+            Boolean hasMinibar,
+            RoomType roomType,
+            String sortBy,
+            String sortOrder
+    ) {
+        Sort.Direction direction = sortOrder.equalsIgnoreCase("desc")
+                ? Sort.Direction.DESC
+                : Sort.Direction.ASC;
+
+        List<String> validSortFields = List.of("roomNumber", "roomType", "hasMinibar", "isAvailable");
+        if (!validSortFields.contains(sortBy)) {
+            sortBy = "roomNumber";
+        }
+
+        return hotelRoomRepository.findByFilters(
+                isAvailable,
+                hasMinibar,
+                roomType,
+                Sort.by(direction, sortBy)
+        );
     }
 }

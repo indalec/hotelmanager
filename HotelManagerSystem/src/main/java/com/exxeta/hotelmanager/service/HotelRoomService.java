@@ -8,8 +8,15 @@ import java.util.List;
 public interface HotelRoomService {
     HotelRoom saveHotelRoom(HotelRoom hotelRoom);
     List<HotelRoom> getAllHotelRooms();
-    List<HotelRoom> getFilteredHotelRooms(Boolean isAvailable, Boolean hasMinibar, RoomType roomType);
     HotelRoom updateHotelRoom(int roomNumber, HotelRoom updatedRoom);
     void deleteHotelRoom(int roomNumber);
     void saveAllHotelRooms(List<HotelRoom> hotelRooms);
+
+    List<HotelRoom> getFilteredHotelRooms(
+            Boolean isAvailable,
+            Boolean hasMinibar,
+            RoomType roomType,
+            String sortBy,
+            String sortOrder
+    );
 }

@@ -19,7 +19,7 @@ import {
     FormControl,
     InputLabel,
     Box,
-    Collapse,
+    
     IconButton,
     Checkbox,
     Switch
@@ -31,15 +31,56 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Tooltip } from '@mui/material';
+import RoomFilters from './Room Filters';
 
 const columns = [
-    { id: 'roomNumber', label: 'Room Number', minWidth: 100 },
-    { id: 'roomType', label: 'Room Type', minWidth: 150 },
-    { id: 'hasMinibar', label: 'Minibar', minWidth: 100 },
-    { id: 'isAvailable', label: 'Availability', minWidth: 120 },
-    { id: 'actions', label: 'Actions', minWidth: 130 }
+    { id: 'roomNumber', label: 'Room Number', minWidth: 100, sortable: true },
+    { id: 'roomType', label: 'Room Type', minWidth: 150, sortable: true },
+    { id: 'hasMinibar', label: 'Minibar', minWidth: 100, sortable: false },
+    { id: 'isAvailable', label: 'Availability', minWidth: 120, sortable: true },
+    { id: 'actions', label: 'Actions', minWidth: 130, sortable: false }
 ];
+
+const SortableTableHeader = ({ column, onSort, sortConfig }) => {
+    const isSorted = sortConfig.field === column.id;
+    
+    return (
+        <TableCell
+            key={column.id}
+            align="left"
+            style={{ 
+                minWidth: column.minWidth, 
+                cursor: column.sortable ? 'pointer' : 'default'
+            }}
+            onClick={() => column.sortable && onSort(column.id)}
+        >
+            <Box display="flex" alignItems="center">
+                {column.label}
+                {column.sortable && (
+                    <Box ml={1} display="flex" flexDirection="column">
+                        <ArrowUpwardIcon
+                            fontSize="small"
+                            sx={{
+                                opacity: isSorted && sortConfig.direction === 'asc' ? 1 : 0.5,
+                                mb: -0.5
+                            }}
+                        />
+                        <ArrowDownwardIcon
+                            fontSize="small"
+                            sx={{
+                                opacity: isSorted && sortConfig.direction === 'desc' ? 1 : 0.5,
+                                mt: -0.5
+                            }}
+                        />
+                    </Box>
+                )}
+            </Box>
+        </TableCell>
+    );
+};
 
 export default function HotelRoomList() {
     const [rooms, setRooms] = useState([]);
@@ -55,11 +96,22 @@ export default function HotelRoomList() {
     });
     const [editingRoomNumber, setEditingRoomNumber] = useState(null);
     const [editedRoom, setEditedRoom] = useState({});
+    const [sortConfig, setSortConfig] = useState({
+        field: 'roomNumber',
+        direction: 'asc'
+    });
 
     const fetchRooms = async (params = {}) => {
         try {
-            const query = new URLSearchParams(params).toString();
+            const queryParams = {
+                ...params,
+                sortBy: sortConfig.field,
+                sortOrder: sortConfig.direction
+            };
+            
+            const query = new URLSearchParams(queryParams).toString();
             const response = await fetch(`http://localhost:8080/hotel-room/filter?${query}`);
+            
             if (!response.ok) throw new Error('Failed to fetch rooms');
             const data = await response.json();
             setRooms(data);
@@ -72,7 +124,17 @@ export default function HotelRoomList() {
 
     useEffect(() => {
         fetchRooms();
-    }, []);
+    }, [sortConfig.field, sortConfig.direction]);
+
+    const handleSort = (field) => {
+        setSortConfig(prev => ({
+            field,
+            direction: prev.field === field 
+                ? prev.direction === 'asc' ? 'desc' : 'asc'
+                : 'asc'
+        }));
+    };
+
 
     const handleEditClick = (room) => {
         setEditingRoomNumber(room.roomNumber);
@@ -277,72 +339,27 @@ export default function HotelRoomList() {
                     </Button>
                 </Box>
 
-                <Collapse in={showFilters}>
-                    <Box sx={{ p: 2, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                        <FormControl sx={{ minWidth: 120 }} size="small">
-                            <InputLabel>Availability</InputLabel>
-                            <Select
-                                name="availability"
-                                value={filters.availability}
-                                label="Availability"
-                                onChange={handleFilterChange}
-                            >
-                                <MenuItem value="all">All</MenuItem>
-                                <MenuItem value="true">Available</MenuItem>
-                                <MenuItem value="false">Occupied</MenuItem>
-                            </Select>
-                        </FormControl>
+               
 
-                        <FormControl sx={{ minWidth: 120 }} size="small">
-                            <InputLabel>Minibar</InputLabel>
-                            <Select
-                                name="minibar"
-                                value={filters.minibar}
-                                label="Minibar"
-                                onChange={handleFilterChange}
-                            >
-                                <MenuItem value="all">All</MenuItem>
-                                <MenuItem value="true">Has Minibar</MenuItem>
-                                <MenuItem value="false">No Minibar</MenuItem>
-                            </Select>
-                        </FormControl>
-
-                        <FormControl sx={{ minWidth: 120 }} size="small">
-                            <InputLabel>Room Type</InputLabel>
-                            <Select
-                                name="roomType"
-                                value={filters.roomType}
-                                label="Room Type"
-                                onChange={handleFilterChange}
-                            >
-                                <MenuItem value="all">All</MenuItem>
-                                <MenuItem value="SINGLE">Single</MenuItem>
-                                <MenuItem value="DOUBLE">Double</MenuItem>
-                                <MenuItem value="SUITE">Suite</MenuItem>
-                            </Select>
-                        </FormControl>
-
-                        <Button variant="contained" onClick={applyFilters}>
-                            Apply Filters
-                        </Button>
-                        <Button variant="outlined" onClick={resetFilters}>
-                            Clear Filters
-                        </Button>
-                    </Box>
-                </Collapse>
+                <RoomFilters 
+    showFilters={showFilters}
+    filters={filters}
+    handleFilterChange={handleFilterChange}
+    applyFilters={applyFilters}
+    resetFilters={resetFilters}
+/>
 
                 <TableContainer sx={{ maxHeight: 650 }}>
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
                                 {columns.map((column) => (
-                                    <TableCell
+                                    <SortableTableHeader
                                         key={column.id}
-                                        align="left"
-                                        style={{ minWidth: column.minWidth }}
-                                    >
-                                        {column.label}
-                                    </TableCell>
+                                        column={column}
+                                        onSort={handleSort}
+                                        sortConfig={sortConfig}
+                                    />
                                 ))}
                             </TableRow>
                         </TableHead>

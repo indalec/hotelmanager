@@ -37,9 +37,18 @@ public class HotelRoomController {
     public List<HotelRoom> filterHotelRooms(
             @RequestParam(required = false) Boolean isAvailable,
             @RequestParam(required = false) Boolean hasMinibar,
-            @RequestParam(required = false) RoomType roomType) {
-        return hotelRoomService.getFilteredHotelRooms(isAvailable, hasMinibar, roomType);
+            @RequestParam(required = false) RoomType roomType,
+            @RequestParam(defaultValue = "roomNumber") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortOrder) {
+        return hotelRoomService.getFilteredHotelRooms(
+                isAvailable,
+                hasMinibar,
+                roomType,
+                sortBy,
+                sortOrder
+        );
     }
+
     @PutMapping("/update/{roomNumber}")
     public ResponseEntity<String> updateHotelRoom(
             @PathVariable int roomNumber,
