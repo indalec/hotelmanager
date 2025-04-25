@@ -61,7 +61,6 @@ public class HotelRoomController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
     @PostMapping("/add-batch")
     public ResponseEntity<String> addBatch(@RequestBody List<HotelRoom> hotelRooms) {
         try {
@@ -71,5 +70,4 @@ public class HotelRoomController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error adding rooms");
         }
     }
-
 }

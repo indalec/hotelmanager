@@ -67,15 +67,13 @@ public class HotelRoom {
         this.hasMinibar = hasMinibar;
     }
 
-    @JsonProperty("isAvailable")
-    private boolean available = true;
 
     public boolean isAvailable() {
-        return available;
+        return isAvailable;
     }
 
     public void setAvailable(boolean available) {
-        this.available = available;
+        this.isAvailable = available;
     }
 
     public LocalDateTime getCreatedAt() {
