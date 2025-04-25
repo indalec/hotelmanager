@@ -32,4 +32,25 @@ public class HotelRoomServiceImpl implements HotelRoomService {
     public List<HotelRoom> getFilteredHotelRooms(Boolean isAvailable, Boolean hasMinibar, RoomType roomType) {
         return hotelRoomRepository.findByFilters(isAvailable, hasMinibar, roomType);
     }
+
+    @Override
+    public HotelRoom updateHotelRoom(int roomNumber, HotelRoom updatedRoom) {
+        return hotelRoomRepository.findById(roomNumber)
+                .map(existingRoom -> {
+                    existingRoom.setRoomType(updatedRoom.getRoomType());
+                    existingRoom.setHasMinibar(updatedRoom.isHasMinibar());
+                    existingRoom.setAvailable(updatedRoom.isAvailable());
+                    return hotelRoomRepository.save(existingRoom);
+                })
+                .orElseThrow(() -> new RuntimeException("Room not found with number: " + roomNumber));
+    }
+
+    @Override
+    public void deleteHotelRoom(int roomNumber) {
+        if (hotelRoomRepository.existsById(roomNumber)) {
+            hotelRoomRepository.deleteById(roomNumber);
+        } else {
+            throw new RuntimeException("Room not found with number: " + roomNumber);
+        }
+    }
 }
