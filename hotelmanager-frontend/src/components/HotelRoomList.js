@@ -19,10 +19,10 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Tooltip } from '@mui/material';
 
 const columns = [
-    { id: 'id', label: 'ID', minWidth: 50 },
     { id: 'roomNumber', label: 'Room Number', minWidth: 100 },
     { id: 'roomType', label: 'Room Type', minWidth: 120 },
     { id: 'hasMinibar', label: 'Minibar', minWidth: 100 },
+    { id: 'isAvailable', label: 'Availability', minWidth: 120 },
 ];
 
 export default function HotelRoomList() {
@@ -87,12 +87,11 @@ export default function HotelRoomList() {
                             {rooms
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((room) => (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={room.id}>
-                                        <TableCell>{room.id}</TableCell>
+                                    <TableRow hover role="checkbox" tabIndex={-1} key={room.roomNumber}>
                                         <TableCell>{room.roomNumber}</TableCell>
                                         <TableCell>
                                             <Chip
-                                                label={room.roomType.toLowerCase()}
+                                                label={room.roomType.charAt(0) + room.roomType.slice(1).toLowerCase()}
                                                 color={
                                                     room.roomType === 'SUITE' ? 'primary' :
                                                         room.roomType === 'DOUBLE' ? 'secondary' : 'default'
@@ -114,6 +113,21 @@ export default function HotelRoomList() {
                                                         sx={{ fontSize: 28, verticalAlign: 'middle', mr: 1 }}
                                                     />
                                                 </Tooltip>
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            {room.isAvailable ? (
+                                                <Chip
+                                                    label="Not available"
+                                                    color="error"
+                                                    variant="outlined"
+                                                />
+                                            ) : (
+                                                <Chip
+                                                    label="Available"
+                                                    color="success"
+                                                    variant="outlined"
+                                                />
                                             )}
                                         </TableCell>
                                     </TableRow>

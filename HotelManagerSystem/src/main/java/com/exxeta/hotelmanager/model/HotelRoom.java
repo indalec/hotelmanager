@@ -1,16 +1,16 @@
 package com.exxeta.hotelmanager.model;
 
-
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "hotel_rooms")
 public class HotelRoom {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(name = "room_number", nullable = false, unique = true)
     private int roomNumber;
 
@@ -21,6 +21,16 @@ public class HotelRoom {
     @Column(name = "has_minibar", nullable = false)
     private boolean hasMinibar;
 
+    @Column(name = "is_available", nullable = false, columnDefinition = "boolean default true")
+    private boolean isAvailable = true;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     public HotelRoom() {}
 
@@ -30,10 +40,6 @@ public class HotelRoom {
         this.hasMinibar = hasMinibar;
     }
 
-
-    public Long getId() {
-        return id;
-    }
 
     public int getRoomNumber() {
         return roomNumber;
@@ -57,5 +63,21 @@ public class HotelRoom {
 
     public void setHasMinibar(boolean hasMinibar) {
         this.hasMinibar = hasMinibar;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }
