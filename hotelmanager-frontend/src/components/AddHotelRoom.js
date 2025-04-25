@@ -25,7 +25,7 @@ export default function AddHotelRoom() {
             roomNumber: parseInt(roomNumber),
             roomType,
             hasMinibar,
-            isAvailable  // This now matches the backend's @JsonProperty
+            isAvailable
         };
 
         try {

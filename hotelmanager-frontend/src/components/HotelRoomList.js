@@ -331,7 +331,7 @@ export default function HotelRoomList() {
                     </Box>
                 </Collapse>
 
-                <TableContainer sx={{ maxHeight: 600 }}>
+                <TableContainer sx={{ maxHeight: 650 }}>
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
