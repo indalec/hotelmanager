@@ -1,0 +1,508 @@
+type: collection.insomnia.rest/5.0
+name: HotelManager
+meta:
+  id: wrk_1b0dfdd72a6d4c9ba5a145b20805a0fa
+  created: 1745507339375
+  modified: 1745507339375
+collection:
+  - url: http://localhost:8080/hotel-room/add
+    name: Add Room
+    meta:
+      id: req_1e92abe00cd04586be837e0b10fa6bc8
+      created: 1745507357562
+      modified: 1745611654017
+      isPrivate: false
+      sortKey: -1745511037797
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "roomNumber": 105,
+          "roomType": "SINGLE",
+          "hasMinibar": true
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.0.2
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8080/hotel-room/get-all
+    name: Get all rooms listed
+    meta:
+      id: req_265d4ccd08944f64b3f0cc50b143cbe1
+      created: 1745514718032
+      modified: 1745611649047
+      isPrivate: false
+      sortKey: -1745514718032
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.0.2
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8080/hotel-room/update/101
+    name: Edit Room
+    meta:
+      id: req_df4b19346d98406696f4fbc3d8c6efbe
+      created: 1745607567040
+      modified: 1745611635631
+      isPrivate: false
+      sortKey: -1745607567040
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+            "roomType": "SINGLE",
+            "hasMinibar": false,
+            "isAvailable": false
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.0.2
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8080/hotel-room/delete/101
+    name: Delete Room
+    meta:
+      id: req_09a8caa3386b4e63b0b5480642ea36bf
+      created: 1745611519185
+      modified: 1745611625855
+      isPrivate: false
+      sortKey: -1745611519186
+    method: DELETE
+    headers:
+      - name: User-Agent
+        value: insomnia/11.0.2
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8080/hotel-room/add-batch
+    name: Add 60 rooms
+    meta:
+      id: req_623e76c096ad47f8a238a79cbfd0f0ac
+      created: 1745613572962
+      modified: 1745618085275
+      isPrivate: false
+      sortKey: -1745613572962
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        [
+
+          {
+            "roomNumber": 104,
+            "roomType": "DOUBLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 105,
+            "roomType": "SINGLE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 106,
+            "roomType": "SUITE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 107,
+            "roomType": "DOUBLE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 108,
+            "roomType": "SINGLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 109,
+            "roomType": "SUITE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 110,
+            "roomType": "DOUBLE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 201,
+            "roomType": "DOUBLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 202,
+            "roomType": "SINGLE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 203,
+            "roomType": "SUITE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 204,
+            "roomType": "DOUBLE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 205,
+            "roomType": "SINGLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 206,
+            "roomType": "SUITE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 207,
+            "roomType": "DOUBLE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 208,
+            "roomType": "SINGLE",
+            "hasMinibar": false,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 209,
+            "roomType": "SUITE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 210,
+            "roomType": "DOUBLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+        	{
+            "roomNumber": 301,
+            "roomType": "DOUBLE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 302,
+            "roomType": "SINGLE",
+            "hasMinibar": false,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 303,
+            "roomType": "SUITE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 304,
+            "roomType": "DOUBLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 305,
+            "roomType": "SINGLE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 306,
+            "roomType": "SUITE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 307,
+            "roomType": "DOUBLE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 308,
+            "roomType": "SINGLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 309,
+            "roomType": "SUITE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 310,
+            "roomType": "DOUBLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 311,
+            "roomType": "DOUBLE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 312,
+            "roomType": "SINGLE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 313,
+            "roomType": "SUITE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 314,
+            "roomType": "DOUBLE",
+            "hasMinibar": false,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 315,
+            "roomType": "SINGLE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 316,
+            "roomType": "SUITE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 317,
+            "roomType": "DOUBLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 318,
+            "roomType": "SINGLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 319,
+            "roomType": "SUITE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 320,
+            "roomType": "DOUBLE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 321,
+            "roomType": "DOUBLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 322,
+            "roomType": "SINGLE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 323,
+            "roomType": "SUITE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 324,
+            "roomType": "DOUBLE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 325,
+            "roomType": "SINGLE",
+            "hasMinibar": false,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 326,
+            "roomType": "SUITE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 327,
+            "roomType": "DOUBLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 328,
+            "roomType": "SINGLE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 329,
+            "roomType": "SUITE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 330,
+            "roomType": "DOUBLE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 331,
+            "roomType": "DOUBLE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 332,
+            "roomType": "SINGLE",
+            "hasMinibar": false,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 333,
+            "roomType": "SUITE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 334,
+            "roomType": "DOUBLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 335,
+            "roomType": "SINGLE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 336,
+            "roomType": "SUITE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 337,
+            "roomType": "DOUBLE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 338,
+            "roomType": "SINGLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 339,
+            "roomType": "SUITE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 340,
+            "roomType": "DOUBLE",
+            "hasMinibar": false,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 341,
+            "roomType": "DOUBLE",
+            "hasMinibar": true,
+            "isAvailable": true
+          },
+          {
+            "roomNumber": 342,
+            "roomType": "SINGLE",
+            "hasMinibar": true,
+            "isAvailable": false
+          },
+          {
+            "roomNumber": 343,
+            "roomType": "SUITE",
+            "hasMinibar": false,
+            "isAvailable": true
+          }
+        ]
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.0.2
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_9c37119104bdfb50f596c13cf0da1ff82d477f09
+    created: 1745507339379
+    modified: 1745507339379
+environments:
+  name: Base Environment
+  meta:
+    id: env_9c37119104bdfb50f596c13cf0da1ff82d477f09
+    created: 1745507339377
+    modified: 1745507339377
+    isPrivate: false
