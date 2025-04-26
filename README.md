@@ -105,8 +105,10 @@ You can find example HTTP requests for the API in `devtools/scripts/hotelmanager
 ![View 2](devtools/images/screenshots/view2.png)
 
 ### View Rooms
+
 ![View 3](devtools/images/screenshots/view3.png)
 
+### Edit Room
 
 ![View 4](devtools/images/screenshots/view4.png)
 
