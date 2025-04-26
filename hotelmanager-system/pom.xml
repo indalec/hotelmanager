@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.exxeta</groupId>
-	<artifactId>hotelmanager</artifactId>
+	<artifactId>hotelmanager-system</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>hotelmanager</name>
 	<description>This app allow users view and update info about the eXXellent Nights! hotel using a database and an API. (Aplication process of Indalecio Valenzuela for Exxeta)</description>
