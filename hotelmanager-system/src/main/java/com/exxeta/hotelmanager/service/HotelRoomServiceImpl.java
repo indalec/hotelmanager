@@ -50,6 +50,8 @@ public class HotelRoomServiceImpl implements HotelRoomService {
             throw new RuntimeException("Room not found with number: " + roomNumber);
         }
     }
+
+    //For JSON batching, devtool for now.
     @Override
     public void saveAllHotelRooms(List<HotelRoom> hotelRooms) {
         hotelRoomRepository.saveAll(hotelRooms);

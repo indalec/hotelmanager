@@ -49,7 +49,6 @@ export default function AddHotelRoom() {
                 setIsAvailable(true);
             } else {
                 const errorData = await response.json();
-                // Handle duplicate room number error
                 if (response.status === 409) {
                     setMessage(`Room ${roomNumber} already exists!`);
                 } else {

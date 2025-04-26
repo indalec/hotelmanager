@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000"})
+//Maps and handles REST API requests to create, read, update, and delete hotel rooms.
+
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000"}) //Database and React URLs
 @RestController
 @RequestMapping("/hotel-room")
 public class HotelRoomController {
@@ -22,17 +24,20 @@ public class HotelRoomController {
         this.hotelRoomService = hotelRoomService;
     }
 
+    // Adds a new hotel room
     @PostMapping("/add")
     public String add(@RequestBody HotelRoom hotelRoom) {
         hotelRoomService.saveHotelRoom(hotelRoom);
         return "New Hotel Room added";
     }
 
+    // Retrieves all hotel rooms
     @GetMapping("/get-all")
     public List<HotelRoom> getAllHotelRooms() {
         return hotelRoomService.getAllHotelRooms();
     }
 
+    // Retrieves filtered and sorted list of hotel rooms
     @GetMapping("/filter")
     public List<HotelRoom> filterHotelRooms(
             @RequestParam(required = false) Boolean isAvailable,
@@ -49,6 +54,7 @@ public class HotelRoomController {
         );
     }
 
+    // Updates an existing hotel room by room number
     @PutMapping("/update/{roomNumber}")
     public ResponseEntity<String> updateHotelRoom(
             @PathVariable int roomNumber,
@@ -61,6 +67,7 @@ public class HotelRoomController {
         }
     }
 
+    // Deletes a hotel room by room number
     @DeleteMapping("/delete/{roomNumber}")
     public ResponseEntity<String> deleteHotelRoom(@PathVariable int roomNumber) {
         try {
@@ -70,6 +77,8 @@ public class HotelRoomController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+    // Adds a batch (JSON) of hotel rooms (for development/testing purposes)
     @PostMapping("/add-batch")
     public ResponseEntity<String> addBatch(@RequestBody List<HotelRoom> hotelRooms) {
         try {

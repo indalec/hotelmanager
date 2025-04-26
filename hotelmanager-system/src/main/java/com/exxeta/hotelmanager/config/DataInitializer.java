@@ -7,8 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//This will create the following rooms  when running the application, but only if database is empty.
-//Availability defaults to true
+//Initializes the database with example rooms at application startup(in case the DB is empty).
 
 @Configuration
 public class DataInitializer {

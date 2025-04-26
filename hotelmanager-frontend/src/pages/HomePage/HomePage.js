@@ -47,16 +47,16 @@ export default function HomePage() {
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Form Section - Added marginRight */}
+      
       <Box sx={{ 
         flex: 1, 
         p: 4,
-        marginRight: 9, // ← Added margin here
+        marginRight: 9,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'background.paper',
-        zIndex: 1 // Ensure form stays on top
+        zIndex: 1 
       }}>
         <Container maxWidth="md">
           <Typography variant="h4" component="h1" gutterBottom sx={{ 

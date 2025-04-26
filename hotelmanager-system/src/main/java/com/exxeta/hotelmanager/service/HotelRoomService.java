@@ -5,6 +5,8 @@ import com.exxeta.hotelmanager.model.RoomType;
 
 import java.util.List;
 
+//Defines service operations related to hotel rooms (interface).
+
 public interface HotelRoomService {
     HotelRoom saveHotelRoom(HotelRoom hotelRoom);
     List<HotelRoom> getAllHotelRooms();

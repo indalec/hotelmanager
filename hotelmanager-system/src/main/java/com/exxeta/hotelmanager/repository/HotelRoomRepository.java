@@ -9,10 +9,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+//Interface for accessing hotel room data using Spring Data JPA.
+
 @Repository
 public interface HotelRoomRepository extends JpaRepository<HotelRoom, Integer> {
 
-    // HotelRoomRepository.java
     @Query("SELECT h FROM HotelRoom h WHERE " +
             "(?1 IS NULL OR h.isAvailable = ?1) AND " +
             "(?2 IS NULL OR h.hasMinibar = ?2) AND " +

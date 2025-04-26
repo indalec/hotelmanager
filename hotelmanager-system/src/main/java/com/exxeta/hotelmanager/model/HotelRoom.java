@@ -7,6 +7,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+//Defines the data model (PostgreSQL) for a hotel room
+
 @Entity
 @Table(name = "hotel_rooms")
 public class HotelRoom {
