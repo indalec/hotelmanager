@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { 
+import {
     Container,
     Paper,
     Button,
@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import DropdownRoomType from './DropdownRoomType';
+import ViewRoomsButton from './ViewRoomsButton';
 
 export default function AddHotelRoom() {
     const [roomNumber, setRoomNumber] = useState('');
@@ -59,7 +60,7 @@ export default function AddHotelRoom() {
                         Add Hotel Room
                     </Typography>
                 </Box>
-                
+
                 <Box component="form" onSubmit={handleSubmit}>
                     <Stack spacing={3}>
                         <TextField
@@ -73,7 +74,7 @@ export default function AddHotelRoom() {
                             inputProps={{ min: 1 }}
                         />
 
-                        <DropdownRoomType 
+                        <DropdownRoomType
                             value={roomType}
                             onChange={(e) => setRoomType(e.target.value)}
                         />
@@ -100,15 +101,18 @@ export default function AddHotelRoom() {
                             label="Mark as Occupied"
                         />
 
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            size="large"
-                            fullWidth
-                            sx={{ mt: 2 }}
-                        >
-                            Add Room
-                        </Button>
+                        <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column' }}>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                size="large"
+                                fullWidth
+                                sx={{ mt: 2 }}
+                            >
+                                Add Room
+                            </Button>
+                            <ViewRoomsButton fullWidth />
+                        </Box>
                     </Stack>
                 </Box>
             </Paper>
