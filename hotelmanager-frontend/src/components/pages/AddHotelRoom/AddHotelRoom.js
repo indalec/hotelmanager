@@ -8,7 +8,9 @@ import {
     Checkbox,
     Stack,
     Box,
-    Typography
+    Typography,
+    Snackbar,
+    Alert
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import DropdownRoomType from './DropdownRoomType';
@@ -19,6 +21,9 @@ export default function AddHotelRoom() {
     const [roomType, setRoomType] = useState('');
     const [hasMinibar, setHasMinibar] = useState(false);
     const [isAvailable, setIsAvailable] = useState(true);
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [message, setMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -37,18 +42,25 @@ export default function AddHotelRoom() {
             });
 
             if (response.ok) {
-                alert('Room added successfully!');
+                setSuccessOpen(true);
                 setRoomNumber('');
                 setRoomType('');
                 setHasMinibar(false);
                 setIsAvailable(true);
             } else {
                 const errorData = await response.json();
-                alert(`Error adding room: ${errorData.message || response.statusText}`);
+                // Handle duplicate room number error
+                if (response.status === 409) {
+                    setMessage(`Room ${roomNumber} already exists!`);
+                } else {
+                    setMessage(`Error: ${errorData.message || response.statusText}`);
+                }
+                setErrorOpen(true);
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Failed to add room. Please check your connection.');
+            setMessage('Failed to add room. Please check your connection.');
+            setErrorOpen(true);
         }
     };
 
@@ -74,7 +86,7 @@ export default function AddHotelRoom() {
                             inputProps={{ min: 1 }}
                         />
 
-                        <DropdownRoomType
+                        <DropdownRoomType 
                             value={roomType}
                             onChange={(e) => setRoomType(e.target.value)}
                         />
@@ -116,6 +128,37 @@ export default function AddHotelRoom() {
                     </Stack>
                 </Box>
             </Paper>
+
+            
+            <Snackbar
+                open={successOpen}
+                autoHideDuration={6000}
+                onClose={() => setSuccessOpen(false)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert 
+                    severity="success" 
+                    onClose={() => setSuccessOpen(false)}
+                    sx={{ width: '100%' }}
+                >
+                    Room added successfully!
+                </Alert>
+            </Snackbar>
+
+            <Snackbar
+                open={errorOpen}
+                autoHideDuration={6000}
+                onClose={() => setErrorOpen(false)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert 
+                    severity="error"
+                    onClose={() => setErrorOpen(false)}
+                    sx={{ width: '100%' }}
+                >
+                    {message}
+                </Alert>
+            </Snackbar>
         </Container>
     );
 }
