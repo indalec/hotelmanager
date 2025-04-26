@@ -131,7 +131,7 @@ import {
                         Minibar
                       </Typography>
                       <Typography variant="h6" fontWeight={500}>
-                        {roomDetails.hasMinibar ? 'Available' : 'Not available'}
+                        {roomDetails.hasMinibar ? 'Equipped' : 'Not equipped'}
                       </Typography>
                     </div>
                   </Stack>
