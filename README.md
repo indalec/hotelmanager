@@ -81,15 +81,6 @@ You can find example HTTP requests for the API in `devtools/scripts/hotelmanager
 
 ---
 
-## 🧠 Development Notes
-
-- Code is documented where necessary to ease future maintenance.
-- Decisions taken during development (like initial data setup, project structure, etc.) are documented directly in the code comments.
-- The project is designed for easy handover and extension by new developers.
-
----
-
-## 🖼️ Screenshots
 
 ## 🖼️ Screenshots
 
