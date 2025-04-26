@@ -1,17 +1,31 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  useMediaQuery,
+  useTheme
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import { useNavigate } from 'react-router-dom';
 
-export default function Appbar() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+export default function NavigationBar() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
+  const location = useLocation();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const pages = [
+    { name: 'Home', path: '/' },
+    { name: 'Add Room', path: '/add-hotel-room' },
+    { name: 'View Rooms', path: '/view-rooms' }
+  ];
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -27,37 +41,52 @@ export default function Appbar() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar variant="dense">
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={handleMenuOpen}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" color="inherit" component="div">
-            Hotel Manager
-          </Typography>
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          Hotel Manager
+        </Typography>
 
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-          >
-            <MenuItem onClick={() => handleNavigation('/')}>Home</MenuItem>
-            <MenuItem onClick={() => handleNavigation('/add-hotel-room')}>
-              Add Hotel Room
-            </MenuItem>
-            <MenuItem onClick={() => handleNavigation('/view-rooms')}>
-              View Rooms
-            </MenuItem>
-          </Menu>
-        </Toolbar>
-      </AppBar>
-    </Box>
+        {isMobile ? (
+          <>
+            <IconButton
+              color="inherit"
+              aria-label="menu"
+              onClick={handleMenuOpen}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              {pages.map((page) => (
+                <MenuItem
+                  key={page.path}
+                  onClick={() => handleNavigation(page.path)}
+                  selected={location.pathname === page.path}
+                >
+                  {page.name}
+                </MenuItem>
+              ))}
+            </Menu>
+          </>
+        ) : (
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            {pages.map((page) => (
+              <Button
+                key={page.path}
+                color="inherit"
+                onClick={() => handleNavigation(page.path)}
+                variant={location.pathname === page.path ? "outlined" : "text"}
+              >
+                {page.name}
+              </Button>
+            ))}
+          </Box>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 }
