@@ -33,8 +33,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Tooltip } from '@mui/material';
 
-import SortableTableHeader from './HotelRoomList/SortableHeader';
-import RoomFilters from './HotelRoomList/RoomFilters';
+import SortableTableHeader from './SortableHeader';
+import RoomFilters from './RoomFilters';
 
 
 const columns = [
