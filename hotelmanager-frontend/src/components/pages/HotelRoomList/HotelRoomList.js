@@ -19,6 +19,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import RoomFilters from './RoomFilters';
 import SortableTableHeader from './SortableHeader';
 import RoomTableCell from './RoomTableCell';
+import AddRoomButton from './AddRoomButton';
 
 const columns = [
     { id: 'roomNumber', label: 'Room Number', minWidth: 100, sortable: true },
@@ -245,6 +246,9 @@ export default function HotelRoomList() {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
+                <Box sx={{ p: 2, display: 'flex', justifyContent: 'flex-start' }}>
+        <AddRoomButton />
+      </Box>
             </Paper>
         </Container>
     );
