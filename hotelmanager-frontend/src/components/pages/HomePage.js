@@ -8,13 +8,19 @@ import {
   Box,
   CircularProgress,
   Alert,
-  List,
-  ListItem,
-  ListItemText,
-  Chip
+  Grid,
+  Card,
+  CardContent,
+  Stack
 } from '@mui/material';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import {
+  MeetingRoom,
+  Category,
+  LocalBar,
+  CheckCircle,
+  HighlightOff,
+  Search
+} from '@mui/icons-material';
 
 export default function HomePage() {
   const [roomNumber, setRoomNumber] = useState('');
@@ -23,8 +29,8 @@ export default function HomePage() {
   const [error, setError] = useState('');
 
   const handleCheckRoom = async () => {
-    if (!roomNumber) {
-      setError('Please enter a room number');
+    if (!roomNumber || isNaN(roomNumber)) {
+      setError('Please enter a valid room number');
       return;
     }
     
@@ -39,7 +45,7 @@ export default function HomePage() {
       const foundRoom = allRooms.find(room => room.roomNumber === parseInt(roomNumber));
       
       if (!foundRoom) {
-        setError('Room not found');
+        setError(`Room #${roomNumber} not found`);
         setRoomDetails(null);
       } else {
         setRoomDetails(foundRoom);
@@ -53,67 +59,142 @@ export default function HomePage() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Welcome to Hotel Manager
+    <Container maxWidth="md" sx={{ mt: 4, mb: 6 }}>
+      <Typography variant="h4" component="h1" gutterBottom sx={{ 
+        fontWeight: 600,
+        textAlign: 'center',
+        mb: 4
+      }}>
+        Hotel Room Status Check
       </Typography>
-      
-      <Paper sx={{ p: 3, mb: 3 }}>
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2 }}>
+
+      <Paper elevation={3} sx={{ 
+        p: 4, 
+        mb: 3,
+        borderRadius: 2,
+      }}>
+        <Stack direction="row" spacing={2} alignItems="center">
           <TextField
+            fullWidth
             label="Enter Room Number"
             variant="outlined"
             type="number"
             value={roomNumber}
             onChange={(e) => setRoomNumber(e.target.value)}
-            sx={{ flexGrow: 1 }}
+            InputProps={{
+              inputProps: { 
+                min: 1,
+                style: { textAlign: 'center', fontSize: '1.2rem' }
+              }
+            }}
           />
           <Button
             variant="contained"
             onClick={handleCheckRoom}
             disabled={loading}
+            size="large"
+            sx={{ 
+              height: '56px',
+              px: 4,
+              borderRadius: 1,
+              fontSize: '1rem'
+            }}
           >
-            {loading ? <CircularProgress size={24} /> : 'Check Room'}
+            {loading ? <CircularProgress size={24} /> : <><Search sx={{ mr: 1 }}/> Check</>}
           </Button>
-        </Box>
+        </Stack>
 
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+        {error && (
+          <Alert severity="error" sx={{ 
+            mt: 3,
+            alignItems: 'center'
+          }}>
+            {error}
+          </Alert>
+        )}
 
         {roomDetails && (
-          <List dense>
-            <ListItem>
-              <ListItemText primary="Room Number" secondary={roomDetails.roomNumber} />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Type" 
-                secondary={<Chip 
-                  label={roomDetails.roomType.toLowerCase()}
-                  color={
-                    roomDetails.roomType === 'SUITE' ? 'primary' :
-                    roomDetails.roomType === 'DOUBLE' ? 'secondary' : 'default'
-                  }
-                />} 
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Minibar" 
-                secondary={roomDetails.hasMinibar ? (
-                  <CheckCircleOutlineIcon color="success" />
-                ) : (
-                  <HighlightOffIcon color="error" />
-                )}
-              />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Availability" 
-                secondary={<Chip
-                  label={roomDetails.isAvailable ? "Available" : "Occupied"}
-                  color={roomDetails.isAvailable ? "success" : "error"}
-                  variant="outlined"
-                />}
-              />
-            </ListItem>
-          </List>
+          <Card elevation={0} sx={{ 
+            mt: 4,
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 2
+          }}>
+            <CardContent>
+              <Grid container spacing={3}>
+                {/* Room Number */}
+                <Grid item xs={12} md={6}>
+                  <Stack direction="row" spacing={2} alignItems="center">
+                    <MeetingRoom fontSize="large" color="primary"/>
+                    <div>
+                      <Typography variant="subtitle1" color="text.secondary">
+                        Room Number
+                      </Typography>
+                      <Typography variant="h5" fontWeight={600}>
+                        #{roomDetails.roomNumber}
+                      </Typography>
+                    </div>
+                  </Stack>
+                </Grid>
+
+                {/* Room Type */}
+                <Grid item xs={12} md={6}>
+                  <Stack direction="row" spacing={2} alignItems="center">
+                    <Category fontSize="large" color="primary"/>
+                    <div>
+                      <Typography variant="subtitle1" color="text.secondary">
+                        Room Type
+                      </Typography>
+                      <Typography variant="h6" fontWeight={500}>
+                        {roomDetails.roomType.charAt(0) + 
+                         roomDetails.roomType.slice(1).toLowerCase()}
+                      </Typography>
+                    </div>
+                  </Stack>
+                </Grid>
+
+                {/* Minibar */}
+                <Grid item xs={12} md={6}>
+                  <Stack direction="row" spacing={2} alignItems="center">
+                    <LocalBar fontSize="large" 
+                      color={roomDetails.hasMinibar ? "success" : "error"}/>
+                    <div>
+                      <Typography variant="subtitle1" color="text.secondary">
+                        Minibar
+                      </Typography>
+                      <Typography variant="h6" fontWeight={500}>
+                        {roomDetails.hasMinibar ? 'Available' : 'Not available'}
+                      </Typography>
+                    </div>
+                  </Stack>
+                </Grid>
+
+                {/* Availability */}
+                <Grid item xs={12} md={6}>
+                  <Stack direction="row" spacing={2} alignItems="center">
+                    {roomDetails.isAvailable ? (
+                      <CheckCircle fontSize="large" color="success"/>
+                    ) : (
+                      <HighlightOff fontSize="large" color="error"/>
+                    )}
+                    <div>
+                      <Typography variant="subtitle1" color="text.secondary">
+                        Status
+                      </Typography>
+                      <Typography variant="h6" fontWeight={600}
+                        sx={{ 
+                          color: roomDetails.isAvailable ? 'success.main' : 'error.main'
+                        }}>
+                        {roomDetails.isAvailable 
+                          ? "Available now" 
+                          : "Currently occupied"}
+                      </Typography>
+                    </div>
+                  </Stack>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
         )}
       </Paper>
     </Container>
