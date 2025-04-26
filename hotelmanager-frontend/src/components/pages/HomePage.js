@@ -1,32 +1,19 @@
 import { useState } from 'react';
 import { 
-  Typography,
-  Container,
-  Paper,
-  TextField,
-  Button,
   Box,
-  CircularProgress,
-  Alert,
-  Grid,
-  Card,
-  CardContent,
-  Stack
+  Container,
+  Typography,
+  Paper,
+  useMediaQuery
 } from '@mui/material';
-import {
-  MeetingRoom,
-  Category,
-  LocalBar,
-  CheckCircle,
-  HighlightOff,
-  Search
-} from '@mui/icons-material';
+import CheckRoomForm from './CheckRoomForm';
 
 export default function HomePage() {
   const [roomNumber, setRoomNumber] = useState('');
   const [roomDetails, setRoomDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const isMobile = useMediaQuery('(max-width:900px)');
 
   const handleCheckRoom = async () => {
     if (!roomNumber || isNaN(roomNumber)) {
@@ -59,144 +46,80 @@ export default function HomePage() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4, mb: 6 }}>
-      <Typography variant="h4" component="h1" gutterBottom sx={{ 
-        fontWeight: 600,
-        textAlign: 'center',
-        mb: 4
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Form Section - Added marginRight */}
+      <Box sx={{ 
+        flex: 1, 
+        p: 4,
+        marginRight: 9, // ← Added margin here
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'background.paper',
+        zIndex: 1 // Ensure form stays on top
       }}>
-        Hotel Room Status Check
-      </Typography>
+        <Container maxWidth="md">
+          <Typography variant="h4" component="h1" gutterBottom sx={{ 
+            fontWeight: 600,
+            mb: 4,
+            textAlign: 'center'
+          }}>
+            Room Status Check
+          </Typography>
+          
+          <Paper elevation={3} sx={{ 
+            p: 4,
+            borderRadius: 2,
+            width: '100%'
+          }}>
+            <CheckRoomForm 
+              roomNumber={roomNumber}
+              setRoomNumber={setRoomNumber}
+              handleCheckRoom={handleCheckRoom}
+              loading={loading}
+              error={error}
+              roomDetails={roomDetails}
+            />
+          </Paper>
+        </Container>
+      </Box>
 
-      <Paper elevation={3} sx={{ 
-        p: 4, 
-        mb: 3,
-        borderRadius: 2,
+      {/* Image Section */}
+      <Box sx={{ 
+        flex: 2,
+        position: 'relative',
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${process.env.PUBLIC_URL}/images/hotel-reception.jpeg)`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        display: { xs: 'none', md: 'flex' },
+        alignItems: 'center',
+        justifyContent: 'center'
       }}>
-        <Stack direction="row" spacing={2} alignItems="center">
-          <TextField
-            fullWidth
-            label="Enter Room Number"
-            variant="outlined"
-            type="number"
-            value={roomNumber}
-            onChange={(e) => setRoomNumber(e.target.value)}
-            InputProps={{
-              inputProps: { 
-                min: 1,
-                style: { textAlign: 'center', fontSize: '1.2rem' }
-              }
-            }}
-          />
-          <Button
-            variant="contained"
-            onClick={handleCheckRoom}
-            disabled={loading}
-            size="large"
-            sx={{ 
-              height: '56px',
-              px: 4,
-              borderRadius: 1,
-              fontSize: '1rem'
-            }}
-          >
-            {loading ? <CircularProgress size={24} /> : <><Search sx={{ mr: 1 }}/> Check</>}
-          </Button>
-        </Stack>
-
-        {error && (
-          <Alert severity="error" sx={{ 
-            mt: 3,
-            alignItems: 'center'
+        <Box sx={{ 
+          position: 'relative',
+          zIndex: 1,
+          textAlign: 'center',
+          color: 'white',
+          p: 4
+        }}>
+          <Typography variant="h2" sx={{ 
+            fontWeight: 700,
+            mb: 2,
+            textTransform: 'uppercase',
+            letterSpacing: 4,
+            fontSize: { xs: '2rem', md: '3.5rem' }
           }}>
-            {error}
-          </Alert>
-        )}
-
-        {roomDetails && (
-          <Card elevation={0} sx={{ 
-            mt: 4,
-            border: '1px solid',
-            borderColor: 'divider',
-            borderRadius: 2
+            eXXellent Nights!
+          </Typography>
+          <Typography variant="h5" sx={{
+            fontStyle: 'italic',
+            letterSpacing: 1,
+            fontSize: { xs: '1.25rem', md: '1.5rem' }
           }}>
-            <CardContent>
-              <Grid container spacing={3}>
-                {/* Room Number */}
-                <Grid item xs={12} md={6}>
-                  <Stack direction="row" spacing={2} alignItems="center">
-                    <MeetingRoom fontSize="large" color="primary"/>
-                    <div>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        Room Number
-                      </Typography>
-                      <Typography variant="h5" fontWeight={600}>
-                        #{roomDetails.roomNumber}
-                      </Typography>
-                    </div>
-                  </Stack>
-                </Grid>
-
-                {/* Room Type */}
-                <Grid item xs={12} md={6}>
-                  <Stack direction="row" spacing={2} alignItems="center">
-                    <Category fontSize="large" color="primary"/>
-                    <div>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        Room Type
-                      </Typography>
-                      <Typography variant="h6" fontWeight={500}>
-                        {roomDetails.roomType.charAt(0) + 
-                         roomDetails.roomType.slice(1).toLowerCase()}
-                      </Typography>
-                    </div>
-                  </Stack>
-                </Grid>
-
-                {/* Minibar */}
-                <Grid item xs={12} md={6}>
-                  <Stack direction="row" spacing={2} alignItems="center">
-                    <LocalBar fontSize="large" 
-                      color={roomDetails.hasMinibar ? "success" : "error"}/>
-                    <div>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        Minibar
-                      </Typography>
-                      <Typography variant="h6" fontWeight={500}>
-                        {roomDetails.hasMinibar ? 'Available' : 'Not available'}
-                      </Typography>
-                    </div>
-                  </Stack>
-                </Grid>
-
-                {/* Availability */}
-                <Grid item xs={12} md={6}>
-                  <Stack direction="row" spacing={2} alignItems="center">
-                    {roomDetails.isAvailable ? (
-                      <CheckCircle fontSize="large" color="success"/>
-                    ) : (
-                      <HighlightOff fontSize="large" color="error"/>
-                    )}
-                    <div>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        Status
-                      </Typography>
-                      <Typography variant="h6" fontWeight={600}
-                        sx={{ 
-                          color: roomDetails.isAvailable ? 'success.main' : 'error.main'
-                        }}>
-                        {roomDetails.isAvailable 
-                          ? "Available now" 
-                          : "Currently occupied"}
-                      </Typography>
-                    </div>
-                  </Stack>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        )}
-      </Paper>
-    </Container>
+            Your Perfect Stay Awaits
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
   );
 }
