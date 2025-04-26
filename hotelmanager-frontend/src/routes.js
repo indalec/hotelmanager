@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom';
-import AddHotelRoom from './components/AddHotelRoom';
+import AddHotelRoom from './components/pages/AddHotelRoom/AddHotelRoom';
 import HomePage from './components/pages/HomePage';
-import HotelRoomList from './components/HotelRoomList/HotelRoomList';
+import HotelRoomList from './components/pages/HotelRoomList/HotelRoomList';
 
 const routes = [
   {
