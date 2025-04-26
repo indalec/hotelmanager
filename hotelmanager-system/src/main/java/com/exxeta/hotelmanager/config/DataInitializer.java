@@ -1,0 +1,46 @@
+package com.exxeta.hotelmanager.config;
+
+import com.exxeta.hotelmanager.model.HotelRoom;
+import com.exxeta.hotelmanager.model.RoomType;
+import com.exxeta.hotelmanager.repository.HotelRoomRepository;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+//This will create the following rooms  when running the application, but only if database is empty.
+//Availability defaults to true
+
+@Configuration
+public class DataInitializer {
+
+    @Bean
+    CommandLineRunner initDatabase(HotelRoomRepository repository) {
+        return args -> {
+            if (repository.count() == 0) {
+                repository.save(
+                        new HotelRoom(
+                                101,
+                                RoomType.DOUBLE,
+                                true
+                        )
+                );
+
+                repository.save(
+                        new HotelRoom(
+                                202,
+                                RoomType.SINGLE,
+                                true
+                        )
+                );
+
+                repository.save(
+                        new HotelRoom(
+                                303,
+                                RoomType.SUITE,
+                                false
+                        )
+                );
+            }
+        };
+    }
+}
