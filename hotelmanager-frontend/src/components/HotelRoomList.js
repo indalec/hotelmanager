@@ -17,13 +17,13 @@ import {
     MenuItem,
     Select,
     FormControl,
-    InputLabel,
     Box,
     
     IconButton,
     Checkbox,
     Switch
 } from '@mui/material';
+
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -31,56 +31,21 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Tooltip } from '@mui/material';
-import RoomFilters from './Room Filters';
+
+import SortableTableHeader from './HotelRoomList/SortableHeader';
+import RoomFilters from './HotelRoomList/RoomFilters';
+
 
 const columns = [
     { id: 'roomNumber', label: 'Room Number', minWidth: 100, sortable: true },
     { id: 'roomType', label: 'Room Type', minWidth: 150, sortable: true },
-    { id: 'hasMinibar', label: 'Minibar', minWidth: 100, sortable: false },
+    { id: 'hasMinibar', label: 'Minibar', minWidth: 100, sortable: true },
     { id: 'isAvailable', label: 'Availability', minWidth: 120, sortable: true },
     { id: 'actions', label: 'Actions', minWidth: 130, sortable: false }
 ];
 
-const SortableTableHeader = ({ column, onSort, sortConfig }) => {
-    const isSorted = sortConfig.field === column.id;
-    
-    return (
-        <TableCell
-            key={column.id}
-            align="left"
-            style={{ 
-                minWidth: column.minWidth, 
-                cursor: column.sortable ? 'pointer' : 'default'
-            }}
-            onClick={() => column.sortable && onSort(column.id)}
-        >
-            <Box display="flex" alignItems="center">
-                {column.label}
-                {column.sortable && (
-                    <Box ml={1} display="flex" flexDirection="column">
-                        <ArrowUpwardIcon
-                            fontSize="small"
-                            sx={{
-                                opacity: isSorted && sortConfig.direction === 'asc' ? 1 : 0.5,
-                                mb: -0.5
-                            }}
-                        />
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{
-                                opacity: isSorted && sortConfig.direction === 'desc' ? 1 : 0.5,
-                                mt: -0.5
-                            }}
-                        />
-                    </Box>
-                )}
-            </Box>
-        </TableCell>
-    );
-};
+
 
 export default function HotelRoomList() {
     const [rooms, setRooms] = useState([]);
