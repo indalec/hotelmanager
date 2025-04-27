@@ -8,6 +8,8 @@ import {
 } from '@mui/material';
 import CheckRoomForm from './CheckRoomForm';
 
+import { hotelManagerApi } from '../../api/hotelManagerApi';
+
 export default function HomePage() {
   const [roomNumber, setRoomNumber] = useState('');
   const [roomDetails, setRoomDetails] = useState(null);
@@ -16,27 +18,11 @@ export default function HomePage() {
   const isMobile = useMediaQuery('(max-width:900px)');
 
   const handleCheckRoom = async () => {
-    if (!roomNumber || isNaN(roomNumber)) {
-      setError('Please enter a valid room number');
-      return;
-    }
-    
     try {
-      setLoading(true);
+      const foundRoom = await hotelManagerApi.getById(roomNumber);
+      if (!foundRoom) throw new Error(`Room #${roomNumber} not found`);
+      setRoomDetails(foundRoom);
       setError('');
-      const response = await fetch(`http://localhost:8080/hotel-room/get-all`);
-      
-      if (!response.ok) throw new Error('Failed to fetch rooms');
-      const allRooms = await response.json();
-      
-      const foundRoom = allRooms.find(room => room.roomNumber === parseInt(roomNumber));
-      
-      if (!foundRoom) {
-        setError(`Room #${roomNumber} not found`);
-        setRoomDetails(null);
-      } else {
-        setRoomDetails(foundRoom);
-      }
     } catch (err) {
       setError(err.message);
       setRoomDetails(null);

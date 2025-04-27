@@ -16,6 +16,8 @@ import TextField from '@mui/material/TextField';
 import DropdownRoomType from './DropdownRoomType';
 import ViewRoomsButton from './ViewRoomsButton';
 
+import { hotelManagerApi } from '../../api/hotelManagerApi';
+
 export default function AddHotelRoom() {
     const [roomNumber, setRoomNumber] = useState('');
     const [roomType, setRoomType] = useState('');
@@ -27,41 +29,18 @@ export default function AddHotelRoom() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const hotelRoom = {
+        try {
+          await hotelManagerApi.create({
             roomNumber: parseInt(roomNumber),
             roomType,
             hasMinibar,
             isAvailable
-        };
-
-        try {
-            const response = await fetch('http://localhost:8080/hotel-room/add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(hotelRoom),
-            });
-
-            if (response.ok) {
-                setSuccessOpen(true);
-                setRoomNumber('');
-                setRoomType('');
-                setHasMinibar(false);
-                setIsAvailable(true);
-            } else {
-                const errorData = await response.json();
-                if (response.status === 409) {
-                    setMessage(`Room ${roomNumber} already exists!`);
-                } else {
-                    setMessage(`Error: ${errorData.message || response.statusText}`);
-                }
-                setErrorOpen(true);
-            }
+          });
         } catch (error) {
-            console.error('Error:', error);
-            setMessage('Failed to add room. Please check your connection.');
-            setErrorOpen(true);
+          setMessage(error.message);
+          setErrorOpen(true);
         }
-    };
+      };
 
     return (
         <Container sx={{ mt: 4, mb: 4 }}>
