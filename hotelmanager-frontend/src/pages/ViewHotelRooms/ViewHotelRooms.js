@@ -20,6 +20,7 @@ import RoomFilters from './RoomFilters';
 import SortableTableHeader from './SortableHeader';
 import RoomTableCell from './RoomTableCell';
 import AddRoomButton from './AddRoomButton';
+import { hotelManagerApi } from '../../api/hotelManagerApi';
 
 const columns = [
     { id: 'roomNumber', label: 'Room Number', minWidth: 100, sortable: true },
@@ -50,24 +51,18 @@ export default function HotelRoomList() {
 
     const fetchRooms = async (params = {}) => {
         try {
-            const queryParams = {
-                ...params,
-                sortBy: sortConfig.field,
-                sortOrder: sortConfig.direction
-            };
-            
-            const query = new URLSearchParams(queryParams).toString();
-            const response = await fetch(`http://localhost:8080/hotel-room/filter?${query}`);
-            
-            if (!response.ok) throw new Error('Failed to fetch rooms');
-            const data = await response.json();
-            setRooms(data);
+          const data = await hotelManagerApi.getAll({
+            ...params,
+            sortBy: sortConfig.field,
+            sortOrder: sortConfig.direction
+          });
+          setRooms(data);
         } catch (err) {
-            setError(err.message);
+          setError(err.message);
         } finally {
-            setLoading(false);
+          setLoading(false);
         }
-    };
+      };
 
     useEffect(() => {
         fetchRooms();
@@ -98,43 +93,27 @@ export default function HotelRoomList() {
 
     const handleSaveEdit = async (roomNumber) => {
         try {
-            const response = await fetch(`http://localhost:8080/hotel-room/update/${roomNumber}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(editedRoom)
-            });
-
-            if (response.ok) {
-                const updatedRooms = rooms.map(room => 
-                    room.roomNumber === roomNumber ? { ...room, ...editedRoom } : room
-                );
-                setRooms(updatedRooms);
-                setEditingRoomNumber(null);
-            } else {
-                alert('Error updating room');
-            }
+          await hotelManagerApi.update(roomNumber, editedRoom);
+          const updatedRooms = rooms.map(room => 
+            room.roomNumber === roomNumber ? { ...room, ...editedRoom } : room
+          );
+          setRooms(updatedRooms);
+          setEditingRoomNumber(null);
         } catch (error) {
-            console.error('Error:', error);
-            alert('Failed to update room');
+          alert(error.message);
         }
-    };
+      };
 
-    const handleDelete = async (roomNumber) => {
-        if (window.confirm(`Are you sure you want to delete room ${roomNumber}?`)) {
-            try {
-                const response = await fetch(`http://localhost:8080/hotel-room/delete/${roomNumber}`, {
-                    method: 'DELETE'
-                });
-                
-                if (response.ok) {
-                    setRooms(rooms.filter(room => room.roomNumber !== roomNumber));
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Failed to delete room');
-            }
+      const handleDelete = async (roomNumber) => {
+        if (window.confirm(`Delete room ${roomNumber}?`)) {
+          try {
+            await hotelManagerApi.delete(roomNumber);
+            setRooms(rooms.filter(room => room.roomNumber !== roomNumber));
+          } catch (error) {
+            alert(error.message);
+          }
         }
-    };
+      };
 
     const handleFilterChange = (event) => {
         const { name, value } = event.target;

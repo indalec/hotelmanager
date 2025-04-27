@@ -15,6 +15,7 @@ import {
 import TextField from '@mui/material/TextField';
 import DropdownRoomType from './DropdownRoomType';
 import ViewRoomsButton from './ViewRoomsButton';
+import { hotelManagerApi } from '../../api/hotelManagerApi';
 
 export default function AddHotelRoom() {
     const [roomNumber, setRoomNumber] = useState('');
@@ -27,38 +28,22 @@ export default function AddHotelRoom() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const hotelRoom = {
-            roomNumber: parseInt(roomNumber),
-            roomType,
-            hasMinibar,
-            isAvailable
-        };
-
         try {
-            const response = await fetch('http://localhost:8080/hotel-room/add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(hotelRoom),
+            await hotelManagerApi.create({
+                roomNumber: parseInt(roomNumber),
+                roomType,
+                hasMinibar,
+                isAvailable
             });
-
-            if (response.ok) {
-                setSuccessOpen(true);
-                setRoomNumber('');
-                setRoomType('');
-                setHasMinibar(false);
-                setIsAvailable(true);
-            } else {
-                const errorData = await response.json();
-                if (response.status === 409) {
-                    setMessage(`Room ${roomNumber} already exists!`);
-                } else {
-                    setMessage(`Error: ${errorData.message || response.statusText}`);
-                }
-                setErrorOpen(true);
-            }
+            
+            setSuccessOpen(true);
+            setRoomNumber('');
+            setRoomType('');
+            setHasMinibar(false);
+            setIsAvailable(true);
+            
         } catch (error) {
-            console.error('Error:', error);
-            setMessage('Failed to add room. Please check your connection.');
+            setMessage(error.message);
             setErrorOpen(true);
         }
     };
