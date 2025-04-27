@@ -1,6 +1,6 @@
 const API_BASE = 'http://localhost:8080/hotel-room';
 
-// Generic response handler
+
 const handleResponse = async (response) => {
   const text = await response.text();
   try {
