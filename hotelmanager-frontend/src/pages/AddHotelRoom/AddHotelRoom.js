@@ -15,7 +15,6 @@ import {
 import TextField from '@mui/material/TextField';
 import DropdownRoomType from './DropdownRoomType';
 import ViewRoomsButton from './ViewRoomsButton';
-
 import { hotelManagerApi } from '../../api/hotelManagerApi';
 
 export default function AddHotelRoom() {
@@ -30,17 +29,24 @@ export default function AddHotelRoom() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-          await hotelManagerApi.create({
-            roomNumber: parseInt(roomNumber),
-            roomType,
-            hasMinibar,
-            isAvailable
-          });
+            await hotelManagerApi.create({
+                roomNumber: parseInt(roomNumber),
+                roomType,
+                hasMinibar,
+                isAvailable
+            });
+            
+            setSuccessOpen(true);
+            setRoomNumber('');
+            setRoomType('');
+            setHasMinibar(false);
+            setIsAvailable(true);
+            
         } catch (error) {
-          setMessage(error.message);
-          setErrorOpen(true);
+            setMessage(error.message);
+            setErrorOpen(true);
         }
-      };
+    };
 
     return (
         <Container sx={{ mt: 4, mb: 4 }}>
