@@ -43,12 +43,17 @@ export default function RoomTableCell({
                 </FormControl>
             ) : (
                 <Chip
-                    label={room.roomType.charAt(0) + room.roomType.slice(1).toLowerCase()}
-                    color={
-                        room.roomType === 'SUITE' ? 'primary' :
-                        room.roomType === 'DOUBLE' ? 'secondary' : 'default'
-                    }
-                />
+      label={room.roomType.charAt(0) + room.roomType.slice(1).toLowerCase()}
+      sx={{
+        backgroundColor: 
+          room.roomType === 'SINGLE' ? '#607D8B' :
+          room.roomType === 'SUITE' ? '#FFC107' :
+          room.roomType === 'DOUBLE' ? '#9C27B0' : '#e0e0e0',
+        color: 
+          room.roomType === 'SUITE' ? 'black' : 'white',
+       
+      }}
+    />
             );
             
         case 'hasMinibar':
