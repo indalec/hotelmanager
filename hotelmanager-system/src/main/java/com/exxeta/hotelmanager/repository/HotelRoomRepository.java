@@ -14,6 +14,11 @@ import java.util.List;
 @Repository
 public interface HotelRoomRepository extends JpaRepository<HotelRoom, Integer> {
 
+
+    //Custom Query:
+    // Dynamically filters rooms by availability, minibar presence, and room type.
+    // Null parameters are ignored in filtering (e.g., null isAvailable shows all).
+    // Supports custom sorting of results. Combines criteria with AND logic.
     @Query("SELECT h FROM HotelRoom h WHERE " +
             "(?1 IS NULL OR h.isAvailable = ?1) AND " +
             "(?2 IS NULL OR h.hasMinibar = ?2) AND " +
