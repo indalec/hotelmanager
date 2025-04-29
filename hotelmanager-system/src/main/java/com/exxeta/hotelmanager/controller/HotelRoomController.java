@@ -12,7 +12,7 @@ import java.util.List;
 
 //Maps and handles REST API requests to create, read, update, and delete hotel rooms.
 
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000"}) //Database and React URLs
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000"}) //React URLs
 @RestController
 @RequestMapping("/hotel-room")
 public class HotelRoomController {
