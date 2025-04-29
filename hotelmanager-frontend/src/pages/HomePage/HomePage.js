@@ -34,6 +34,7 @@ export default function HomePage() {
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       
+       {/* Form Section */}
       <Box sx={{ 
         flex: 1, 
         p: 4,
